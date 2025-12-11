@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Full-Stack Starter — Home</title>
+  <meta name="description" content="Starter full-stack website (HTML + CSS)."/>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="#">
+        <div class="logo">FS</div>
+        <div class="brand-text">
+          <div class="name">Full-Stack Starter</div>
+          <div class="tag">Modern small-project scaffold</div>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact" class="cta">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="card hero-left">
+          <h1>Build fast. Ship often. Learn more.</h1>
+          <p class="lead">Create a small full-stack app with this clean frontend. Connect a backend (Node/Express, Flask, Django) to the provided API stubs.</p>
+
+          <div class="features" id="features">
+            <span class="feature">Responsive</span>
+            <span class="feature">Accessible</span>
+            <span class="feature">API-ready</span>
+            <span class="feature">Dark theme</span>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" onclick="document.getElementById('contact-name').focus()">Get in touch</button>
+            <button class="btn outline" onclick="location.href='#projects'">See projects</button>
+          </div>
+
+          <div class="projects" id="projects" aria-label="Project examples">
+            <article class="project">
+              <h4>Tasks App</h4>
+              <p>CRUD + auth + REST API + persistent DB.</p>
+            </article>
+            <article class="project">
+              <h4>Notes</h4>
+              <p>Markdown editor, autosave, and server sync.</p>
+            </article>
+            <article class="project">
+              <h4>Shop</h4>
+              <p>Products, cart, checkout flow (Stripe or test mode).</p>
+            </article>
+          </div>
+        </div>
+
+        <aside class="card aside">
+          <div class="stats">
+            <div class="stat">
+              <h3>3</h3>
+              <p>Starter projects</p>
+            </div>
+            <div class="stat">
+              <h3>API</h3>
+              <p>Ready to connect</p>
+            </div>
+            <div class="stat">
+              <h3>Dark</h3>
+              <p>Theme included</p>
+            </div>
+          </div>
+
+          <div class="contact card-contact" id="contact">
+            <h3>Contact</h3>
+            <form id="contact-form" autocomplete="on">
+              <input id="contact-name" name="name" type="text" placeholder="Your name" required>
+              <input id="contact-email" name="email" type="email" placeholder="Your email" required>
+              <textarea id="contact-message" name="message" rows="4" placeholder="Message" required></textarea>
+              <div class="muted">We'll only use this to reply — no spam.</div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <button type="submit" class="btn primary">Send</button>
+                <button type="reset" class="btn outline">Clear</button>
+              </div>
+              <div id="contact-status" class="muted" aria-live="polite" style="margin-top:8px;"></div>
+            </form>
+          </div>
+
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> Full-Stack Starter • Built with ☕ and code</div>
+    </footer>
+  </div>
+
+  <script>
+    // small UX niceties + form POST stub (change endpoint to your backend)
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('contact-status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = 'Sending…';
+
+      const payload = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        message: form.message.value.trim()
+      };
+
+      try {
+        // adjust URL to your API route (Node/Express: POST /api/contact)
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || 'Server error');
+        }
+
+        status.textContent = 'Message sent — thanks!';
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Failed to send. (If building locally, set up a backend endpoint at /api/contact)';
+      }
+    });
+  </script>
+</body>
+</html>
